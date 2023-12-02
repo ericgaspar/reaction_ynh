@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=__APP__
 Group=__APP__
-ExecStart=__INSTALL_DIR__/reaction start -c __INSTALL_DIR__/reaction.yml
+ExecStart=__INSTALL_DIR__/reaction start -c __INSTALL_DIR__/reaction.jsonnet
 StateDirectory=reaction
 RuntimeDirectory=reaction
 WorkingDirectory=__INSTALL_DIR__

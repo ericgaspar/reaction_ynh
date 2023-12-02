@@ -1,0 +1,49 @@
+local banFor(time) = {
+  ban: {
+    cmd: ['iptables', '-w', '-A', 'reaction', '-s', '<ip>', '-j', 'DROP'],
+  },
+  unban: {
+    after: time,
+    cmd: ['iptables', '-w', '-D', 'reaction', '-s', '<ip>', '-j', 'DROP'],
+  },
+};
+{
+  patterns: {
+    ip: {
+      regex: @'(([0-9]{1,3}\.){3}[0-9]{1,3})|([0-9a-fA-F:]{2,90})',
+    },
+  },
+  start: [
+    [ 'iptables', '-w', '-N', 'reaction' ],
+    [ 'iptables', '-w', '-I', 'INPUT', '-p', 'all', '-j', 'reaction' ],
+  ],
+  stop: [
+    [ 'iptables', '-w,', '-D', 'INPUT', '-p', 'all', '-j', 'reaction' ],
+    [ 'iptables', '-w', '-F', 'reaction' ],
+    [ 'iptables', '-w', '-X', 'reaction' ],
+  ],
+  streams: {
+    ssh: {
+      cmd: ['journalctl', '-f', '-u', 'sshd.service'],
+      filters: {
+        login: {
+          regex: [ @'authentication failure;.*rhost=<ip>' ],
+          retry: 3,
+          retryperiod: '3h',
+          actions: banFor('24h'),
+        },
+      },
+    },
+    nginx: {
+      cmd: ['tail', '-f', '/var/log/nginx/access.log'],
+      filters: {
+        directus: {
+          regex: [ @'^<ip> .* "POST /auth/login HTTP/..." 401', ],
+          retry: 6,
+          retryperiod: '4h',
+          actions: banFor('4h'),
+        },
+      },
+    },
+  },
+}
