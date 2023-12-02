@@ -33,6 +33,7 @@ then
 fi
 
 chown -R $app:www-data "$install_dir"
+chmod +x "$install_dir/reaction"
 
 #=================================================
 # REAPPLY SYSTEM CONFIGURATIONS
@@ -52,10 +53,10 @@ ynh_use_logrotate --non-append
 #=================================================
 ynh_script_progression --message="Updating a configuration file..." --weight=1
 
-ynh_add_config --template="some_config_file" --destination="$install_dir/some_config_file"
+ynh_add_config --template="reaction.jsonnet" --destination="$install_dir/reaction.jsonnet"
 
-chmod 400 "$install_dir/some_config_file"
-chown $app:$app "$install_dir/some_config_file"
+chmod 400 "$install_dir/reaction.jsonnet"
+chown $app:$app "$install_dir/reaction.jsonnet"
 
 #=================================================
 # START SYSTEMD SERVICE
