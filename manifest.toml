@@ -14,10 +14,8 @@ maintainers = ["eric_G"]
 [upstream]
 license = "free"
 website = "https://example.com"
-demo = "https://demo.example.com"
-admindoc = "https://yunohost.org/packaging_apps"
-userdoc = "https://yunohost.org/apps"
-code = "https://some.forge.com/example/example"
+admindoc = "https://blog.ppom.me/fr-reaction/"
+code = "https://framagit.org/ppom/reaction"
 
 [integration]
 yunohost = ">= 11.2"
